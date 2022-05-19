@@ -12,13 +12,22 @@ def root():
     initial_view=(df_stops['stop_lat'].median(),df_stops['stop_lon'].median())
     return render_template('index.html',initial_view=initial_view)
 
-@app.route('/nearest_vertex', methods=['GET'])
+@app.route('/nearest_vertex', methods=['POST'])
 def get_nearest_vertex():
-    try:
-        latlng = request.args.get('latlng')
-        return latlng
-    except:
-        return 'Hola'   
+    # try:
+    #     latlng = request.args.get('latlng')
+    #     return latlng
+    # except:
+    data = {
+        "latInput":request.form['latInput'],
+        "lngInput":request.form['lngInput'],
+        "latTarget":request.form['latTarget'],
+        "lngTarget":request.form['lngTarget']
+    }
+
+    puntos = [(data['latInput'],data['lngInput']),(data['latTarget'],data['lngTarget'])]
+    print(puntos)
+    return jsonify(data)   
 
 @app.route('/stops', methods=['GET'])
 def get_all_stops():
