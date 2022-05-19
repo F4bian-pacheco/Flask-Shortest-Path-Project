@@ -1,7 +1,9 @@
 import pandas as pd
 from flask import Flask, render_template, request,jsonify
+from dotenv import load_dotenv
 from load_graph_data import *
 
+load_dotenv(".flaskenv")
 app=Flask(__name__)
 
 df_stops=pd.read_csv('stops.txt')
