@@ -73,16 +73,16 @@
         counter+=1;
         });
     });
-    // $.getJSON('http://127.0.0.1:5000/roads', function (data) {
-    //   var edges_style = {
-    //     'color': '#000000',
-    //     'weight': 1,
-    //     'opacity': 0.5
-    //   };
-    //   L.geoJSON(data,{
-    //     style:edges_style,
-    //   }).addTo(map);
-    // });
+    $.getJSON('http://127.0.0.1:5000/roads', function (data) {
+      var edges_style = {
+        'color': '#000000',
+        'weight': 1,
+        'opacity': 0.5
+      };
+      L.geoJSON(data,{
+        style:edges_style,
+      }).addTo(map);
+    });
     map.setView([{{initial_view[0]}}, {{initial_view[1]}}], 11);    
   </script>
 </body>
