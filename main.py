@@ -10,16 +10,6 @@ df_stops = pd.read_csv('stops.txt')
 roads, vertex, edges = load_data('maule.geojson')
 
 
-def get_key(val):
-    count = 1
-    for key, value in vertex.items():
-        if count < 10:
-            print(key,value)
-        if val == value:
-            return key
-        count += 1
-
-
 @app.route('/')
 def root():
     initial_view = (df_stops['stop_lat'].median(),
@@ -43,14 +33,6 @@ def get_nearest_vertex():
     puntos = [(float(data['latInput']), float(data['lngInput'])),
             (float(data['latTarget']), float(data['lngTarget']))]
     
-    vertices = [get_key(i) for i in puntos]
-    print("vertices: ",vertices)
-    print("puntos",puntos)
-    count = 1
-    for key, value in edges.items():
-        if count < 10:
-            print(key,value)
-        count += 1
     return jsonify(data)
 
 
