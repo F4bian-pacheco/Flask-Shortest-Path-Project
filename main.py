@@ -1,7 +1,10 @@
 import pandas as pd
+import networkx as nx
+
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 from load_graph_data import *
+from scipy.spatial.kdtree import KDTree
 
 load_dotenv(".flaskenv")
 app = Flask(__name__)
@@ -32,8 +35,32 @@ def get_nearest_vertex():
 
     puntos = [(float(data['latInput']), float(data['lngInput'])),
             (float(data['latTarget']), float(data['lngTarget']))]
+
+    #!desde aca se hace el proceso
+
+    grafo = nx.Graph()
+    grafo.add_weighted_edges_from([(u,v,w) for ((u,v),w) in edges.items()])
+    # len_subgrafos = [len(c) for c in sorted(nx.connected_components(grafo), key=len, reverse=True)]
+    max_subgrafo = max(nx.connected_components(grafo),key=len)
+
+    sub_grafo = grafo.subgraph(max_subgrafo)
+
     
-    return jsonify(data)
+    tree = KDTree(list(sub_grafo.edges))
+    
+    dd1,ii1 = tree.query(puntos[0],1)
+    dd2,ii2 = tree.query(puntos[1],1)
+
+    inicio = hash(tuple(tree.data[ii1].tolist()))
+    fin = hash(tuple(tree.data[ii2].tolist()))
+    #TODO Saber que grafo usar
+    # path = nx.shortest_path(sub_grafo,source=inicio,target=fin,weight='weight')
+    coordinates = [ [vertex[p][1],vertex[p][0]] for p in path]
+
+    geom_path = {"type": "Feature","geometry":{"type":"LineString","coordinates":coordinates}}
+
+    json_data = {"type":"FeatureCollection","features":[geom_path]}
+    return jsonify(json_data)
 
 
 @app.route('/stops', methods=['GET'])

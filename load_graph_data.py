@@ -10,6 +10,7 @@ def load_data(file_name,verbose=True):
         if row['geometry']['type']=='LineString':
             coords=row['geometry']['coordinates']
             path_len=0
+            # for (loc1,loc2) in zip(coords[:-1],coords[1:]):
             for (loc1,loc2) in zip(coords[:-1],coords[1:]):
                 lon1,lat1=loc1
                 lon2,lat2=loc2
