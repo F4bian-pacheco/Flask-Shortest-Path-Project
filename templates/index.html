@@ -23,7 +23,7 @@
     <div class ="navbar navbar-default navbar-fixed-top" role ="navigation">
 
       <div class="top-pad">
-        <form class="form-horizontal" method="POST" action="" role="form">
+        <form class="form-horizontal" method="POST" action="{{ url_for('get_nearest_vertex') }}" role="form">
           <label for="latInput">Lat</label>
           <input type="text" id="latInput" name="latInput">
           <label for="lngInput">Lon</label>
@@ -47,7 +47,7 @@
       // does this feature have a property named popupContent?
       layer.bindPopup(feature.properties.name)
     }
-    $.getJSON('http://localhost:5000/stops', function (data) {
+    $.getJSON('http://127.0.0.1:5000/stops', function (data) {
       var vertex_style = {
         'radius': 5,
         'fillColor': "#ff7800",
@@ -73,7 +73,7 @@
         counter+=1;
         });
     });
-    $.getJSON('http://localhost:5000/roads', function (data) {
+    $.getJSON('http://127.0.0.1:5000/roads', function (data) {
       var edges_style = {
         'color': '#000000',
         'weight': 1,
