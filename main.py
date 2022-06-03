@@ -4,7 +4,7 @@ import networkx as nx
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 from load_graph_data import *
-from scipy.spatial.kdtree import KDTree
+from scipy import spatial
 
 load_dotenv(".flaskenv")
 app = Flask(__name__)
@@ -20,7 +20,7 @@ def root():
     return render_template('index.html', initial_view=initial_view)
 
 
-@app.route('/nearest_vertex', methods=['POST'])
+@app.route('/nearest_vertex',methods=['POST',"GET"])
 def get_nearest_vertex():
     # try:
     #     latlng = request.args.get('latlng')
@@ -32,6 +32,12 @@ def get_nearest_vertex():
         "latTarget": request.form['latTarget'],
         "lngTarget": request.form['lngTarget']
     }
+    # data = {
+    #     "latInput": request.form.get('latInput'),
+    #     "lngInput": request.form.get('lngInput'),
+    #     "latTarget": request.form.get('latTarget'),
+    #     "lngTarget": request.form.get('lngTarget')
+    # }
 
     puntos = [(float(data['latInput']), float(data['lngInput'])),
             (float(data['latTarget']), float(data['lngTarget']))]
@@ -44,22 +50,31 @@ def get_nearest_vertex():
     max_subgrafo = max(nx.connected_components(grafo),key=len)
 
     sub_grafo = grafo.subgraph(max_subgrafo)
+    # print(len(sub_grafo.edges))
+    node_data = [t for k,t in vertex.items() if k in sub_grafo]
+    tree = spatial.KDTree(node_data)
+    
+    _, ii1 = tree.query(puntos[0],1)
+    _, ii2 = tree.query(puntos[1],1)
 
-    
-    tree = KDTree(list(sub_grafo.edges))
-    
-    dd1,ii1 = tree.query(puntos[0],1)
-    dd2,ii2 = tree.query(puntos[1],1)
+    # print(tree.data[:-10])
+
+    # print(ii1,ii2)
 
     inicio = hash(tuple(tree.data[ii1].tolist()))
     fin = hash(tuple(tree.data[ii2].tolist()))
+    # inicio = 4850735313403625470
+    # fin = 5916944280498880157
     #TODO Saber que grafo usar
-    # path = nx.shortest_path(sub_grafo,source=inicio,target=fin,weight='weight')
+    #! Ya tengo el grafo
+    path = nx.shortest_path(grafo,source=inicio,target=fin,weight='weight')
     coordinates = [ [vertex[p][1],vertex[p][0]] for p in path]
+    # print(coordinates)
 
-    geom_path = {"type": "Feature","geometry":{"type":"LineString","coordinates":coordinates}}
+    geom_path = {"type":"Feature","geometry":{"type":"LineString","coordinates":coordinates}}
 
     json_data = {"type":"FeatureCollection","features":[geom_path]}
+    # return jsonify(json_data)
     return jsonify(json_data)
 
 
