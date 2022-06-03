@@ -20,7 +20,7 @@ def root():
     return render_template('index.html', initial_view=initial_view)
 
 
-@app.route('/nearest_vertex',methods=['POST','GET'])
+@app.route('/nearest_vertex',methods=['POST'])
 def get_nearest_vertex():
     # try:
     #     latlng = request.args.get('latlng')
@@ -50,24 +50,26 @@ def get_nearest_vertex():
     max_subgrafo = max(nx.connected_components(grafo),key=len)
 
     sub_grafo = grafo.subgraph(max_subgrafo)
-    print(len(sub_grafo.edges))
-    tree = spatial.KDTree(sub_grafo.edges)
+    # print(len(sub_grafo.edges))
+    node_data = [t for k,t in vertex.items() if k in sub_grafo]
+    tree = spatial.KDTree(node_data)
     
-    dd1,ii1 = tree.query(puntos[0],1)
-    dd2,ii2 = tree.query(puntos[1],1)
+    _, ii1 = tree.query(puntos[0],1)
+    _, ii2 = tree.query(puntos[1],1)
 
     # print(tree.data[:-10])
 
-    print(ii1,ii2)
+    # print(ii1,ii2)
 
-    # inicio = hash(tuple(tree.data[ii1].tolist()))
-    # fin = hash(tuple(tree.data[ii2].tolist()))
-    inicio = 4850735313403625470
-    fin = 5916944280498880157
+    inicio = hash(tuple(tree.data[ii1].tolist()))
+    fin = hash(tuple(tree.data[ii2].tolist()))
+    # inicio = 4850735313403625470
+    # fin = 5916944280498880157
     #TODO Saber que grafo usar
+    #! Ya tengo el grafo
     path = nx.shortest_path(grafo,source=inicio,target=fin,weight='weight')
     coordinates = [ [vertex[p][0],vertex[p][1]] for p in path]
-    print(coordinates)
+    # print(coordinates)
 
     geom_path = {"type": "Feature","geometry":{"type":"LineString","coordinates":coordinates}}
 

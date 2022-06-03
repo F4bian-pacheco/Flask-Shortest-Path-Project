@@ -84,16 +84,6 @@
     //   }).addTo(map);
     // });
 
-    $.getJSON('http://127.0.0.1:5000/nearest_vertex', function (data) {
-      var edges_style = {
-        'color': '#990000',
-        'weight': 2,
-        'opacity': 1
-      };
-      L.geoJSON(data,{
-        style:edges_style,
-      }).addTo(map);
-    });
     map.setView([{{initial_view[0]}}, {{initial_view[1]}}], 11);    
   </script>
 </body>
