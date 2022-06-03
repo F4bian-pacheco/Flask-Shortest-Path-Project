@@ -10,7 +10,7 @@ load_dotenv(".flaskenv")
 app = Flask(__name__)
 
 df_stops = pd.read_csv('stops.txt')
-roads, vertex, edges = load_data_min('maule.geojson')
+roads, vertex, edges = load_data('maule.geojson')
 
 
 @app.route('/')
@@ -20,7 +20,7 @@ def root():
     return render_template('index.html', initial_view=initial_view)
 
 
-@app.route('/nearest_vertex',methods=['POST'])
+@app.route('/nearest_vertex',methods=['POST',"GET"])
 def get_nearest_vertex():
     # try:
     #     latlng = request.args.get('latlng')
@@ -68,12 +68,13 @@ def get_nearest_vertex():
     #TODO Saber que grafo usar
     #! Ya tengo el grafo
     path = nx.shortest_path(grafo,source=inicio,target=fin,weight='weight')
-    coordinates = [ [vertex[p][0],vertex[p][1]] for p in path]
+    coordinates = [ [vertex[p][1],vertex[p][0]] for p in path]
     # print(coordinates)
 
-    geom_path = {"type": "Feature","geometry":{"type":"LineString","coordinates":coordinates}}
+    geom_path = {"type":"Feature","geometry":{"type":"LineString","coordinates":coordinates}}
 
     json_data = {"type":"FeatureCollection","features":[geom_path]}
+    # return jsonify(json_data)
     return jsonify(json_data)
 
 
