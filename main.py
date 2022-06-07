@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 from load_graph_data import *
 from scipy import spatial
+from os import environ 
 
 load_dotenv(".flaskenv")
 app = Flask(__name__)
@@ -12,47 +13,39 @@ app = Flask(__name__)
 df_stops = pd.read_csv('stops.txt')
 roads, vertex, edges = load_data('maule.geojson')
 
+puerto = environ.get('FLASK_RUN_PORT')
+
+grafo = nx.Graph()
+grafo.add_weighted_edges_from([(u,v,w) for ((u,v),w) in edges.items()])
+# len_subgrafos = [len(c) for c in sorted(nx.connected_components(grafo), key=len, reverse=True)]
+max_subgrafo = max(nx.connected_components(grafo),key=len)
+
+sub_grafo = grafo.subgraph(max_subgrafo)
+# print(len(sub_grafo.edges))
+node_data = [t for k,t in vertex.items() if k in sub_grafo]
+tree = spatial.KDTree(node_data)
 
 @app.route('/')
 def root():
     initial_view = (df_stops['stop_lat'].median(),
                     df_stops['stop_lon'].median())
-    return render_template('index.html', initial_view=initial_view)
+    return render_template('index.html', initial_view=initial_view,puerto=puerto)
 
 
 @app.route('/nearest_vertex',methods=['POST',"GET"])
 def get_nearest_vertex():
-    # try:
-    #     latlng = request.args.get('latlng')
-    #     return latlng
-    # except:
+
     data = {
         "latInput": request.form['latInput'],
         "lngInput": request.form['lngInput'],
         "latTarget": request.form['latTarget'],
         "lngTarget": request.form['lngTarget']
     }
-    # data = {
-    #     "latInput": request.form.get('latInput'),
-    #     "lngInput": request.form.get('lngInput'),
-    #     "latTarget": request.form.get('latTarget'),
-    #     "lngTarget": request.form.get('lngTarget')
-    # }
 
     puntos = [(float(data['latInput']), float(data['lngInput'])),
             (float(data['latTarget']), float(data['lngTarget']))]
 
     #!desde aca se hace el proceso
-
-    grafo = nx.Graph()
-    grafo.add_weighted_edges_from([(u,v,w) for ((u,v),w) in edges.items()])
-    # len_subgrafos = [len(c) for c in sorted(nx.connected_components(grafo), key=len, reverse=True)]
-    max_subgrafo = max(nx.connected_components(grafo),key=len)
-
-    sub_grafo = grafo.subgraph(max_subgrafo)
-    # print(len(sub_grafo.edges))
-    node_data = [t for k,t in vertex.items() if k in sub_grafo]
-    tree = spatial.KDTree(node_data)
     
     _, ii1 = tree.query(puntos[0],1)
     _, ii2 = tree.query(puntos[1],1)
@@ -67,7 +60,7 @@ def get_nearest_vertex():
     # fin = 5916944280498880157
     #TODO Saber que grafo usar
     #! Ya tengo el grafo
-    path = nx.shortest_path(grafo,source=inicio,target=fin,weight='weight')
+    path = nx.dijkstra_path(grafo,source=inicio,target=fin,weight='weight')
     coordinates = [ [vertex[p][1],vertex[p][0]] for p in path]
     # print(coordinates)
 
@@ -106,4 +99,4 @@ def get_all_roads():
 
 
 if __name__ == '__main__':
-    app.run(host="localhost", port=5000, debug=True)
+    app.run(host="localhost", port=puerto, debug=True)
