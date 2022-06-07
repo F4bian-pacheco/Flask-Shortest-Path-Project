@@ -2,89 +2,90 @@
 <html lang="en">
 
 <head>
-  <title>Caminos Region del Maule</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/universal.css') }}" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-  crossorigin=""/>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-  crossorigin=""></script>
+	<title>Caminos Region del Maule</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/universal.css') }}" />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+		integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+		crossorigin="" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+		integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+		crossorigin=""></script>
 </head>
 
 <body>
-  <div class ="container-fluid">
-    
-    <div class ="navbar navbar-default navbar-fixed-top" role ="navigation">
+	<div class="container-fluid">
 
-      <div class="top-pad">
-        <form class="form-horizontal" method="POST" action="{{ url_for('get_nearest_vertex') }}" role="form">
-          <label for="latInput">Lat</label>
-          <input type="text" id="latInput" name="latInput">
-          <label for="lngInput">Lon</label>
-          <input type="text" id="lngInput" name="lngInput">
-          <label for="latTarget">Lat</label>
-          <input type="text" id="latTarget" name="latTarget">
-          <label for="lngTarget">Lon</label>
-          <input type="text" id="lngTarget" name="lngTarget">
-          <button type="submit" class="btn btn-default">Submit</button>
-       </form>
-     </div>
-    </div>
-  </div>
- 
-  <div id="map"></div>
-  <script src="{{ url_for('static', filename='js/universal.js') }}" /></script>
-  <script>
-    var counter=0;
+		<div class="navbar navbar-default navbar-fixed-top" role="navigation">
 
-    function onEachFeature(feature, layer) {
-      // does this feature have a property named popupContent?
-      layer.bindPopup(feature.properties.name)
-    }
-    $.getJSON('http://127.0.0.1:5000/stops', function (data) {
-      var vertex_style = {
-        'radius': 5,
-        'fillColor': "#ff7800",
-        'color': "#000",
-        'weight': 1,
-        'opacity': 1,
-        'fillOpacity': 0.5
-      };
-      L.geoJSON(data,{
-        pointToLayer: function (feature, latlng) {
-									return L.circleMarker(latlng, vertex_style);
-								},	
-							onEachFeature: onEachFeature	
-      }).addTo(map).on('click', function(e) {
-        if(counter % 2 == 0){
-          document.getElementById('latInput').value = e.latlng.lat;
-          document.getElementById('lngInput').value = e.latlng.lng;  
-        }
-        else{
-          document.getElementById('latTarget').value = e.latlng.lat;
-          document.getElementById('lngTarget').value = e.latlng.lng;  
-        }
-        counter+=1;
-        });
-    });
-    $.getJSON('http://127.0.0.1:5000/roads', function (data) {
-      var edges_style = {
-        'color': '#000000',
-        'weight': 1,
-        'opacity': 0.5
-      };
-      L.geoJSON(data,{
-        style:edges_style,
-      }).addTo(map);
-    });
-    map.setView([{{initial_view[0]}}, {{initial_view[1]}}], 11);    
-  </script>
+			<div class="top-pad">
+				<form class="form-horizontal" method="POST" action="{{ url_for('get_nearest_vertex') }}" role="form">
+					<label for="latInput">Lat</label>
+					<input type="text" id="latInput" name="latInput">
+					<label for="lngInput">Lon</label>
+					<input type="text" id="lngInput" name="lngInput">
+					<label for="latTarget">Lat</label>
+					<input type="text" id="latTarget" name="latTarget">
+					<label for="lngTarget">Lon</label>
+					<input type="text" id="lngTarget" name="lngTarget">
+					<button type="submit" class="btn btn-default">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div id="map"></div>
+	<script src="{{ url_for('static', filename='js/universal.js') }}" />
+	</script>
+	<script>
+		var counter = 0;
+
+		function onEachFeature(feature, layer) {
+			// does this feature have a property named popupContent?
+			layer.bindPopup(feature.properties.name)
+		}
+		$.getJSON('http://127.0.0.1:5000/stops', function (data) {
+			var vertex_style = {
+				'radius': 5,
+				'fillColor': "#ff7800",
+				'color': "#000",
+				'weight': 1,
+				'opacity': 1,
+				'fillOpacity': 0.5
+			};
+			L.geoJSON(data, {
+				pointToLayer: function (feature, latlng) {
+					return L.circleMarker(latlng, vertex_style);
+				},
+				onEachFeature: onEachFeature
+			}).addTo(map).on('click', function (e) {
+				if (counter % 2 == 0) {
+					document.getElementById('latInput').value = e.latlng.lat;
+					document.getElementById('lngInput').value = e.latlng.lng;
+				}
+				else {
+					document.getElementById('latTarget').value = e.latlng.lat;
+					document.getElementById('lngTarget').value = e.latlng.lng;
+				}
+				counter += 1;
+			});
+		});
+		$.getJSON('http://127.0.0.1:5000/roads', function (data) {
+			var edges_style = {
+				'color': '#000000',
+				'weight': 1,
+				'opacity': 0.5
+			};
+			L.geoJSON(data, {
+				style: edges_style,
+			}).addTo(map);
+		});
+		map.setView([{{ initial_view[0]}}, {{ initial_view[1]}}], 11);    
+	</script>
 </body>
 
 </html>
