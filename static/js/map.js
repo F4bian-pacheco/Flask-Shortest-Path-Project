@@ -2,16 +2,12 @@
 var datos = get_datos()
 console.log(datos)
 
-let port = datos[0]
-let url_destino = datos[1]
-
-console.log(port)
-console.log(url_destino)
+let url_destino = datos[0]
 
 var counter = 0;
 
-const ruta_stops = `http://127.0.0.1:${port}/stops`
-const ruta_roads = `http://127.0.0.1:${port}/roads`
+const ruta_stops = `https://flask-shortest-path.herokuapp.com/stops`
+const ruta_roads = `https://flask-shortest-path.herokuapp.com/roads`
 var Roads = L.layerGroup().addTo(map);
 
 

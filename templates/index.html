@@ -54,10 +54,9 @@
 	<script src="{{ url_for('static', filename='js/universal.js') }}" />
 	</script>
 	<script>
-		const port_ = {{ puerto }}
 		const destino_ = "{{url_for('get_nearest_vertex')}}"
 		function get_datos() {
-			return [port_, destino_]
+			return [destino_]
 		};
 		map.setView([{{ initial_view[0]}}, {{ initial_view[1]}}], 11);
 	</script>
