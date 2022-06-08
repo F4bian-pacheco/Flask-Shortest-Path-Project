@@ -1,8 +1,4 @@
 
-
-// let port;
-// let url_destino;
-
 var datos = get_datos()
 console.log(datos)
 
@@ -20,7 +16,6 @@ var Roads = L.layerGroup().addTo(map);
 
 
 function onEachFeature(feature, layer) {
-    // does this feature have a property named popupContent?
     layer.bindPopup(feature.properties.name)
 }
 $.getJSON(ruta_stops, function (data) {
@@ -49,17 +44,7 @@ $.getJSON(ruta_stops, function (data) {
         counter += 1;
     });
 });
-// $.getJSON(ruta_roads, function (data) {
-//     var edges_style = {
-//         'color': '#000000',
-//         'weight': 1,
-//         'opacity': 0.3
-//     };
-//     console.log(data)
-//     L.geoJSON(data, {
-//         style: edges_style,
-//     }).addTo(map);
-// });
+
 
 $("#form").submit(function (e) {
     e.preventDefault();

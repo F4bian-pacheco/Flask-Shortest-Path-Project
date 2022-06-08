@@ -23,9 +23,9 @@ def load_data(file_name, verbose=True):
                 V.update({hash(loc2): loc2})
                 E.update({(hash(loc1), hash(loc2)): dist})
                 path_len += dist
-            # if verbose:
-            #     print('path length : {}, linestring length : {}'.format(path_len,row['properties']['st_length_']/1000))
-            #     print(loc1,loc2)
+            if verbose:
+                print('path length : {}, linestring length : {}'.format(path_len,row['properties']['st_length_']/1000))
+                print(loc1,loc2)
     return data, V, E
 
 
@@ -41,24 +41,13 @@ def load_data_min(file_name, verbose=True):
 
             path_len = 0
 
-            lat1, lon1 = coords[0][::-1]
-            lat2, lon2 = coords[-1][::-1]
-
             loc1 = tuple(coords[0][::-1])
             loc2 = tuple(coords[-1][::-1])
             dist = hs.haversine(loc1, loc2)
-            if i == 2:
-                print(coords[:-1])
-                print(coords[1:])
-                print("loc1: ", loc1)
-                print("loc2: ", loc2)
-                print(dist)
+
             V.update({hash(loc1): loc1})
             V.update({hash(loc2): loc2})
             E.update({(hash(loc1), hash(loc2)): dist})
-            # path_len+=dist
+            path_len+=dist
         i += 1
-        # if verbose:
-        #     print('path length : {}, linestring length : {}'.format(path_len,row['properties']['st_length_']/1000))
-        #     print(loc1,loc2)
     return data, V, E

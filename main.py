@@ -12,17 +12,15 @@ load_dotenv(".flaskenv")
 app = Flask(__name__)
 
 df_stops = pd.read_csv('stops.txt')
-roads, vertex, edges = load_data('maule.geojson')
+roads, vertex, edges = load_data('maule.geojson',verbose=False)
 
 puerto = environ.get('FLASK_RUN_PORT')
 
 grafo = nx.Graph()
 grafo.add_weighted_edges_from([(u,v,w) for ((u,v),w) in edges.items()])
-# len_subgrafos = [len(c) for c in sorted(nx.connected_components(grafo), key=len, reverse=True)]
 max_subgrafo = max(nx.connected_components(grafo),key=len)
 
 sub_grafo = grafo.subgraph(max_subgrafo)
-# print(len(sub_grafo.edges))
 node_data = [t for k,t in vertex.items() if k in sub_grafo]
 tree = spatial.KDTree(node_data)
 
@@ -53,16 +51,9 @@ def get_nearest_vertex():
     _, ii1 = tree.query(puntos[0],1)
     _, ii2 = tree.query(puntos[1],1)
 
-    # print(tree.data[:-10])
-
-    # print(ii1,ii2)
 
     inicio = hash(tuple(tree.data[ii1].tolist()))
     fin = hash(tuple(tree.data[ii2].tolist()))
-    # inicio = 4850735313403625470
-    # fin = 5916944280498880157
-    #TODO Saber que grafo usar
-    #! Ya tengo el grafo
     if select == "Dijkstra":
         start = time()
         path = nx.dijkstra_path(grafo,source=inicio,target=fin,weight='weight')
