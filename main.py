@@ -12,7 +12,7 @@ load_dotenv(".flaskenv")
 app = Flask(__name__)
 
 df_stops = pd.read_csv('stops.txt')
-roads, vertex, edges = load_data('maule.geojson',verbose=False)
+roads, vertex, edges = load_data_min('maule.geojson',verbose=False)
 
 puerto = environ.get('FLASK_RUN_PORT')
 
