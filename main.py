@@ -100,5 +100,5 @@ def get_all_roads():
     return jsonify(roads['features'])
 
 
-if __name__ == '__main__':
-    app.run(port=puerto, debug=True)
+# if __name__ == '__main__':
+#     app.run(port=puerto, debug=True)
