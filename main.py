@@ -98,7 +98,3 @@ def get_all_roads():
             "geometry": row['geometry']
         })
     return jsonify(roads['features'])
-
-
-# if __name__ == '__main__':
-#     app.run(port=puerto, debug=True)
