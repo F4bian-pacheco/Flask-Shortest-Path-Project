@@ -64,14 +64,12 @@ def get_nearest_vertex():
         fin = time() - start
 
     tiempo = fin
-    print(f"{select}: {fin} segundos")
     coordinates = [ [vertex[p][1],vertex[p][0]] for p in path]
     # print(coordinates)
 
     geom_path = {"type":"Feature","geometry":{"type":"LineString","coordinates":coordinates}}
 
     json_data = {"type":"FeatureCollection","features":[geom_path]}
-    # return jsonify(json_data)
     return jsonify([json_data,tiempo])
 
 
@@ -103,4 +101,4 @@ def get_all_roads():
 
 
 if __name__ == '__main__':
-    app.run(host="localhost", port=puerto, debug=True)
+    app.run(port=puerto, debug=True)
