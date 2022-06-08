@@ -1,5 +1,6 @@
 import pandas as pd
 import networkx as nx
+from time import time
 
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
@@ -34,6 +35,8 @@ def root():
 
 @app.route('/nearest_vertex',methods=['POST',"GET"])
 def get_nearest_vertex():
+    select = request.form['selected']
+    print(select)
 
     data = {
         "latInput": request.form['latInput'],
@@ -60,7 +63,17 @@ def get_nearest_vertex():
     # fin = 5916944280498880157
     #TODO Saber que grafo usar
     #! Ya tengo el grafo
-    path = nx.dijkstra_path(grafo,source=inicio,target=fin,weight='weight')
+    if select == "Dijkstra":
+        start = time()
+        path = nx.dijkstra_path(grafo,source=inicio,target=fin,weight='weight')
+        fin = time() - start
+    else:
+        start = time()
+        _,path = nx.single_source_bellman_ford(grafo,source=inicio,target=fin,weight='weight')
+        fin = time() - start
+
+    tiempo = fin
+    print(f"{select}: {fin} segundos")
     coordinates = [ [vertex[p][1],vertex[p][0]] for p in path]
     # print(coordinates)
 
@@ -68,7 +81,7 @@ def get_nearest_vertex():
 
     json_data = {"type":"FeatureCollection","features":[geom_path]}
     # return jsonify(json_data)
-    return jsonify(json_data)
+    return jsonify([json_data,tiempo])
 
 
 @app.route('/stops', methods=['GET'])

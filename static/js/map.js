@@ -49,17 +49,17 @@ $.getJSON(ruta_stops, function (data) {
         counter += 1;
     });
 });
-$.getJSON(ruta_roads, function (data) {
-    var edges_style = {
-        'color': '#000000',
-        'weight': 1,
-        'opacity': 0.3
-    };
-    console.log(data)
-    L.geoJSON(data, {
-        style: edges_style,
-    }).addTo(map);
-});
+// $.getJSON(ruta_roads, function (data) {
+//     var edges_style = {
+//         'color': '#000000',
+//         'weight': 1,
+//         'opacity': 0.3
+//     };
+//     console.log(data)
+//     L.geoJSON(data, {
+//         style: edges_style,
+//     }).addTo(map);
+// });
 
 $("#form").submit(function (e) {
     e.preventDefault();
@@ -75,10 +75,11 @@ $("#form").submit(function (e) {
                 'weight': 3,
                 'opacity': 2
             };
-            console.log(response);
-            L.geoJSON(response, {
+            L.geoJSON(response[0], {
                 style: edges_style,
             }).addTo(Roads);
+            var tiempo = new Number(response[1]);
+            $("#tiempo").text(tiempo.toPrecision(8));
         }
     });
 

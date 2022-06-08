@@ -33,10 +33,16 @@
 					<input type="text" id="latTarget" name="latTarget">
 					<label for="lngTarget">Lon</label>
 					<input type="text" id="lngTarget" name="lngTarget">
+					<select class="selectpicker" name="selected">
+						<option>Dijkstra</option>
+						<option>Bellman-Ford</option>
+					</select>
+
 					<button type="submit" class="btn btn-default">Submit</button>
 				</form>
 			</div>
 			<button type="button" class="btn btn-warning" onclick="limpiar()">Limpiar Mapa</button>
+			<div>Tiempo de respuesta del algoritmo: <span id="tiempo"></span> seconds</div>
 		</div>
 	</div>
 
@@ -44,15 +50,15 @@
 	<script src="{{ url_for('static', filename='js/universal.js') }}" />
 	</script>
 	<script>
-		const port_ = {{puerto}}
+		const port_ = {{ puerto }}
 		const destino_ = "{{url_for('get_nearest_vertex')}}"
-		function get_datos(){
-			return [port_,destino_]
+		function get_datos() {
+			return [port_, destino_]
 		};
-		map.setView([{{initial_view[0]}}, {{initial_view[1]}}], 11);
+		map.setView([{{ initial_view[0]}}, {{ initial_view[1]}}], 11);
 	</script>
 	<script src="{{ url_for('static', filename='js/map.js') }}" />
 	</script>
-	</body>
+</body>
 
 </html>
