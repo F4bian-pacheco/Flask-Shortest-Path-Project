@@ -6,8 +6,8 @@ let url_destino = datos[0]
 
 var counter = 0;
 
-const ruta_stops = `https://flask-shortest-path.herokuapp.com/stops`
-const ruta_roads = `https://flask-shortest-path.herokuapp.com/roads`
+const ruta_stops = `https://flask-shortest-path-project-production.up.railway.app//stops`
+const ruta_roads = `https://flask-shortest-path-project-production.up.railway.app//roads`
 var Roads = L.layerGroup().addTo(map);
 
 
