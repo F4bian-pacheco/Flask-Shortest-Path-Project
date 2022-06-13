@@ -4,3 +4,7 @@
 
 ## Despliegue en heroku
 [Flask-Shortest-Path](https://flask-shortest-path.herokuapp.com/)
+
+### Heroku ha tenido algunos inconvenientes, asi que esta desplegado aca de igual manera
+## Despliegue en railway
+[Flask-Shprtest-Path](https://flask-shortest-path-project-production.up.railway.app/)
